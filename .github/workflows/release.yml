@@ -1,0 +1,79 @@
+name: Build and Release Windows EXE
+
+on:
+  push:
+    branches: [ "main" ]
+  create:
+    tags:
+      - 'v*'
+
+jobs:
+  build-windows-exe:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install build deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      - name: Run PyInstaller to build one-file exe
+        run: |
+          pyinstaller --onefile --windowed file_renamer_gui.py --distpath dist
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: file_renamer_gui-exe
+          path: dist/*.exe
+
+  create-release:
+    needs: build-windows-exe
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: file_renamer_gui-exe
+          path: ./release_artifacts
+
+      - name: Determine release tag and title
+        id: tag
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            echo "tag_ref=${GITHUB_REF##refs/tags/}" >> $GITHUB_OUTPUT
+            echo "title=Release ${GITHUB_REF##refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-7)
+            TAG="dev-${SHORT_SHA}"
+            echo "tag_ref=${TAG}" >> $GITHUB_OUTPUT
+            echo "title=Dev Build ${SHORT_SHA}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create or update release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag.outputs.tag_ref }}
+          name: ${{ steps.tag.outputs.title }}
+          body: |
+            Automated build from ${{ github.repository }}@${{ github.sha }}
+            - Platform: windows-latest
+            - Built by GitHub Actions
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload EXE to release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release_artifacts/*.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
