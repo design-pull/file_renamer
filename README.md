@@ -25,14 +25,6 @@
 
 ---
 
-## ダウンロード
-- 最新の Windows 実行ファイル（file_renamer_gui.exe）は GitHub Releases をご確認ください。  
-- ダウンロード後、exe をダブルクリックして起動します。Windows のスマートスクリーンやアンチウイルスに警告される場合は、公開元と SHA256 を確認してください。
-
-SHA256 の確認例（Windows の certutil を使用）:
-```powershell
-certutil -hashfile file_renamer_gui.exe SHA256
-
 クイックスタート（ユーザー向け）
 「ファイル選択」ボタンで対象ファイルを選ぶ。
 
@@ -105,3 +97,11 @@ Undo が失敗する
 実行後にファイルが別の場所に移動・削除された可能性があります。undo ログ（rename_undo_log.csv）を確認してください。
 
 追加のログやエラー出力を貼っていただければ具体的な対処を提示します。
+
+## ダウンロード
+- 最新の Windows 実行ファイル（file_renamer_gui.exe）は GitHub Releases をご確認ください。  
+- ダウンロード後、exe をダブルクリックして起動します。Windows のスマートスクリーンやアンチウイルスに警告される場合は、公開元と SHA256 を確認してください。
+
+SHA256 の確認例（Windows の certutil を使用）:
+```powershell
+certutil -hashfile file_renamer_gui.exe SHA256
