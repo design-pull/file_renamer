@@ -2,8 +2,7 @@
 
 ファイル連番リネーマーは、選択したファイル群を指定したベース名と連番で一括リネームするシンプルなデスクトップ GUI ツールです。Windows 実行ファイル（exe）で配布でき、開発者はソースから実行とビルドが可能です。
 
-![スクリーンショット メイン画面]
-([docs/screenshots/main.png](https://design-pull.com/wp-content/uploads/2025/10/bandicam-2025-10-30-20-50-27-262.jpg))
+<img src="https://design-pull.com/wp-content/uploads/2025/10/bandicam-2025-10-30-20-50-27-262.jpg" alt="複数ファイル名の一括置換ソフト">
 
 ## 目次
 - 概要
